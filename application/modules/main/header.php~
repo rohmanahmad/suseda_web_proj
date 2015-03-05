@@ -1,0 +1,10 @@
+
+<link rel="stylesheet" href="<?=base_url('assets/css/bootstrap.min.css')?>">
+<link rel="stylesheet" href="<?=base_url('assets/css/style.css')?>">
+<table>
+ <tr>
+  <td><?=anchor('HOME',site_url('score_board/home'))?></td>
+  <td><?=anchor('S.Board',site_url('score_board/scoreBoard'))?></td>
+  <td><?=anchor('',site_url('score_board/home'))?></td>
+ </tr>
+</table>

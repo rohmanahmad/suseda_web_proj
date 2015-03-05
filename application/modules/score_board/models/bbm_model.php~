@@ -1,0 +1,99 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+ define('PRE','bbm_');
+ 
+ define('T_USER',PRE.'users');
+ define('T_PART',PRE.'participants');
+ define('T_MSG',PRE.'messages');
+
+class Bbm_model extends CI_Model{
+ function __construct(){
+	parent::__construct();
+ }
+ 
+ #--------------------- EXPORTS ------------------------#
+ 
+ function select_users($param=''){
+	if(empty($param)){
+		return $this->db->get(T_USER);
+	}else{
+		$this->db->where($param);
+		return $this->db->get(T_USER);
+	}
+ }
+ 
+ function select_messages($param=''){
+	if(empty($param)){
+		return $this->db->get(T_MSG);
+	}else{
+		$this->db->where($param);
+		return $this->db->get(T_MSG);
+	}
+ }
+ 
+ function select_participants($param=''){
+	if(empty($param)){
+		return $this->db->get(T_PART);
+	}else{
+		$this->db->where($param);
+		return $this->db->get(T_PART);
+	}
+ }
+ 
+ function insert_new_user($param=''){
+	if(is_array($param)){
+		$this->db->insert(T_USER,$param);
+	}
+ }
+ 
+ function insert_new_message($param=''){
+	if(is_array($param)){
+		$this->db->insert(T_MSG,$param);
+	}
+ }
+ 
+ function insert_new_participant($param=''){
+	if(is_array($param)){
+		$this->db->insert(T_PART,$param);
+	}
+ }
+ 
+ #---------------------END OF EXPORTS ------------------------#
+ 
+ function select_all($table,$param=''){
+	if($table=="messages"){
+		$sql="SELECT * FROM `bbm_messages` 
+				LEFT JOIN `bbm_participants` 
+					ON `bbm_participants`.`participant_id`=`bbm_messages`.`participant_id` 
+				LEFT JOIN `bbm_users` 
+					ON `bbm_users`.`userid`=`bbm_participants`.`user_id`";
+		$q=$this->db->query($sql);
+		return $q;
+	}
+ 	$this->db->where($param);
+ 	return $this->db->get(PRE.$table);
+ }
+ 
+ function select_coloum_name($table){
+	$sql="SHOW COLUMNS FROM ".PRE.$table." ";
+ 	return $this->db->query($sql);
+ }
+ 
+ function upload_filename($filename=''){
+	if(!empty($filename)){
+	 $data=array('filename'=>$filename,'time'=>date('Y-m-d g:i:s'),'status'=>1);
+	 $this->db->insert(PRE.'uploaded_files',$data);
+	}
+ }
+ 
+ function select_file_for_export($userdata=''){
+	$sql="SELECT * FROM `".PRE."uploaded_files` ORDER BY ID DESC LIMIT 1";
+	$q=$this->db->query($sql);
+	foreach($q->result() as $r){
+	 return $r->filename;
+	 exit();
+	}
+ }
+ 
+
+}
+?>

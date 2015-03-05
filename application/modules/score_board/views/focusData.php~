@@ -1,0 +1,29 @@
+<?php
+if (!isset($result)) exit;
+?>
+<table class='table'>
+ <tr>
+  <th>No</th>
+  <th>Periode</th>
+  <th>Fokus</th>
+  <th></th>
+ </tr>
+ <?php
+ $i=1;
+  foreach($result as $r){
+   $id=$r->focusId;
+   $period=$r->period;
+   $focus=$r->focus;
+ ?>
+ <tr>
+  <td><?=$i?></td>
+  <td><?=$period?></td>
+  <td><?=$focus?></td>
+  <td><?=anchor(site_url('score_board/scoreBoards/'.$id),'View Score')?></td>
+ </tr>
+ <?php
+  $i++
+  }
+ ?>
+</table>
+
