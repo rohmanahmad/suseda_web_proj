@@ -341,6 +341,7 @@ class Score_board extends CI_Controller {
 		$job_data=array();
 		 for($a=0;$a<=count($_POST['job'])-1;$a++){
 		 	$job=$_POST['job'][$a];
+		 	 if($job=='')$job='NotSet(Empty)';
 		 	$job_id=$_POST['jid'][$a];
 		 	if($job_id != ''){
 				$this->m->update_row('job',array('job_name'=>$job),array('ID'=>$job_id));
@@ -412,7 +413,7 @@ class Score_board extends CI_Controller {
 				 }
 				}
 			}
-		 //redirect('score_board/targets');		
+		 redirect('score_board/targets');		
 		}
 	}
 	
@@ -434,9 +435,12 @@ class Score_board extends CI_Controller {
 	}
 	
 	function delete_job($job_id=0,$target_id=0){
-	 $sc_id=$this->m->get_schedule_id(array('job_id'=>$job_id));
+	 $q=$this->m->get_schedule_id(array('job_id'=>$job_id));
+	 foreach($q as $r){
+	 	$sc_id=$r->ID;
+	 	$this->m->delete('job_result',array('schedule_id'=>$sc_id));
+	 }
 	 $table=array(	'job'=>array('ID'=>$job_id),
-	 		'job_result'=>array('schedule_id'=>$sc_id),
 	 		'schedule'=>array('job_id'=>$job_id)
 	 	);
 	 foreach($table as $t=>$key){
@@ -469,6 +473,7 @@ class Score_board extends CI_Controller {
 			}
 			redirect('score_board/targets');
 		}
+		if(!isset($_POST['check'])){echo 'tidak ada field yang akan di edit!!!';exit;}
 		$post=$this->input->post('check');
 		foreach($post as $sc_id){
 		 $param=array('schedule.ID'=>$sc_id);

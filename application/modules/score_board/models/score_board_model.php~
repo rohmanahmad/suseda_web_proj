@@ -157,7 +157,7 @@ class Score_board_model extends CI_Model{
  }
  
  function delete($table,$data){
- 	
+ 	$this->delete_row($table,$data);
  }
  
 

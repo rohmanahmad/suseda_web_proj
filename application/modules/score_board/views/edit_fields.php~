@@ -23,7 +23,6 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 			 $date[]=date_format($d,'Y-m-d');
 		 }
 	  }
-	 
 	      if($n == 1)
 		if($name=='period' ){ 
 		 $periode=form_input(array('type'=>'date','name'=>'start_period','value'=>$date[0],'id'=>'datePicker'))
@@ -37,7 +36,7 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	 if($name =='sboard' ){
 	 	if($first == true){
 			$date_period=$date[0].'|'.$date[1];
-			$periode=str_replace('|',' - ',$date_period);
+			$periode=str_replace('|',' - ',str_replace('-','/',$date_period));
 	 		$jobname[]=form_hidden('date_period',$date_period)
 	 			.form_hidden('jid[]',$job_id).form_input('job[]',$jname,'style="width:90%;margin-top:2px;" ')
 	 			.form_button('','Add','class="btn btn-default" style="margin-left:5px;" onclick="add_field();"');
@@ -55,7 +54,7 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	 </tr>
 	 <tr>
 	  <td>Periode</td>
-	  <td><?php if(isset($periode))echo $periode;?></td>
+	  <td><?php if(isset($periode))echo $periode;else echo 's';?></td>
 	 </tr>
 	 <tr>
 	  <td>Score Board</td>

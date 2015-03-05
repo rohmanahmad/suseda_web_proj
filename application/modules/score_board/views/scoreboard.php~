@@ -57,85 +57,87 @@ foreach($result as $r){
 		 $d=''.$d[0].' / <sup>'.$d[1].'</sup>';
 		 
 		  if($nn%2==1) $bg='#C0C0C0'; else $bg='#fff'; 
-		  if($date==date('d/m'))$bg='red';
-		 echo "<td style='font-size:10px;padding:2px;font-weight:bold' bgcolor='".$bg."'>".$d."</td>";
+		  if($date==date('d/m')){$bg='red';$now=' (Now)';}else$now='';
+		 echo "<td style='font-size:10px;padding:2px;font-weight:bold' bgcolor='".$bg."'>".$d.$now."</td>";
 		 $nn++;
 		}
 	echo "</tr>";
 	 }
 	 $n=2;
+if($jobId != ''){
 	 ?>
 
- <tr>
-  <td colspan=1><?=$jobName//.anchor('score_board/change_field/jname/'.$jobId.'/'.$ID,'&nbsp;<span class="glyphicon glyphicon-pencil"></span>')?></td>
-  <td><?=anchor('score_board/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash"></i>')?></td>
-  <td style="padding:0px;">
-  	<div class='row' style='margin-right:0px;'>
-		  <div class='col-md-2' style='width:90%;float:right;background:#fff;' >
-		   <span id="<?='data'.$o?>"></span><br/>
-		   <span id="<?='data_count'.$o?>"></span>
-		  </div> 
-	</div>
-  </td>
-  <td id="<?='ico'.$o?>">.</td>
-<?php
-
-$job=$model->getJobRes(array('schedule.job_id'=>$jobId));
-$nn=0;
-$fontsize=15 - ($rowCount/6);
-$sum=0;
-$total_count=0;
-  foreach($job as $r){
-  	$count=$r->count;
-	$sc_id=$r->ID;
-  	$total=$model->get_total_contents(array('schedule.ID'=>$r->ID));
-  	$sum += $total;
-  	$total_count += $count;
-  	$date=$r->date;
-	if($nn%2==1) $bg='#C0C0C0'; else $bg='#fff'; 
-	if($date==date('Y-m-d'))$bg='#F95959';
-	echo "<td style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
-		<div class='row' style='margin-right: 0px;'>
-		  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
-		  $total
-		  ."</div> 
-		  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>".
-		  form_checkbox('check[]',$sc_id).br().'<i>'.$count.'</i>' 
-		  ."</div> 
-		  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'show','class="col-md-8"')."
+	 <tr>
+	  <td colspan=1><?=$jobName//.anchor('score_board/change_field/jname/'.$jobId.'/'.$ID,'&nbsp;<span class="glyphicon glyphicon-pencil"></span>')?></td>
+	  <td><?=anchor('score_board/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash"></i>')?></td>
+	  <td style="padding:0px;">
+	  	<div class='row' style='margin-right:0px;'>
+			  <div class='col-md-2' style='width:90%;float:right;background:#fff;' >
+			   <span id="<?='data'.$o?>"></span><br/>
+			   <span id="<?='data_count'.$o?>"></span>
+			  </div> 
 		</div>
-	</td>";
-	$nn++;
-  }
+	  </td>
+	  <td id="<?='ico'.$o?>">.</td>
+	<?php
 
-?>
-<td><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil"></i></a>'?></td>
-<script src="<?=base_url('assets/js/jquery.js')?>"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	var sum="<?=$sum?>";
-	var count="<?=$total_count?>";	
-	var class_a="#data<?=$o?>";
-	var class_b="#data_count<?=$o?>";
-	var class_c="#ico<?=$o?>";
+	$job=$model->getJobRes(array('schedule.job_id'=>$jobId));
+	$nn=0;
+	$fontsize=15 - ($rowCount/6);
+	$sum=0;
+	$total_count=0;
+	  foreach($job as $r){
+	  	$count=$r->count;
+		$sc_id=$r->ID;
+	  	$total=$model->get_total_contents(array('schedule.ID'=>$r->ID));
+	  	$sum += $total;
+	  	$total_count += $count;
+	  	$date=$r->date;
+		if($nn%2==1) $bg='#C0C0C0'; else $bg='#fff'; 
+		//if($date==date('Y-m-d'))$bg='#F95959';
+		echo "<td style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
+			<div class='row' style='margin-right: 0px;'>
+			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
+			  $total
+			  ."</div> 
+			  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>".
+			  form_checkbox('check[]',$sc_id).br().'<i>'.$count.'</i>' 
+			  ."</div> 
+			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'show','class="col-md-8"')."
+			</div>
+		</td>";
+		$nn++;
+	  }
+
+	?>
+	<td><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil"></i></a>'?></td>
+	<script src="<?=base_url('assets/js/jquery.js')?>"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var sum="<?=$sum?>";
+		var count="<?=$total_count?>";	
+		var class_a="#data<?=$o?>";
+		var class_b="#data_count<?=$o?>";
+		var class_c="#ico<?=$o?>";
 	
-	$(class_a).html(sum);
-	 if(sum < count){
-	 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/confused.gif')?>\">");
-	 }else
-	 if(sum > count){
-	 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/shade_smile.gif')?>\">");
-	 }else{
-	 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/grin.gif')?>\">");
-	 }
-	$(class_b).text(count);
+		$(class_a).html('<b>' + sum +'</b>');
+		 if(sum < count){
+		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/confused.gif')?>\" title=\"Lagi Kalah!\">");
+		 }else
+		 if(sum > count){
+		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/shade_smile.gif')?>\" title=\"Menang Coy!\">");
+		 }else{
+		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/grin.gif')?>\" title=\"Hehehe Pas!\">");
+		 }
+		$(class_b).text(count);
 
-});
-</script>
- </tr>
- 
- <?php
- $o++;
+	});
+	</script>
+	 </tr>
+	 
+	 <?php
+	 $o++;
+  } //for if($jobId != '')
  }
 ?>
 </table>

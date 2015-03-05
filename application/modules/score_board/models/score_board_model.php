@@ -144,8 +144,8 @@ class Score_board_model extends CI_Model{
  function get_schedule_id($param){
  	$this->db->where($param);
  	$q=$this->db->get('schedule');
- 	$res=$q->row();
- 	return $res->ID;
+ 	$res=$q->result();
+ 	return $res;
  }
  
  function get_sch_datas($param){

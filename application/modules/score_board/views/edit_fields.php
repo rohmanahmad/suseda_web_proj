@@ -23,7 +23,6 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 			 $date[]=date_format($d,'Y-m-d');
 		 }
 	  }
-	 
 	      if($n == 1)
 		if($name=='period' ){ 
 		 $periode=form_input(array('type'=>'date','name'=>'start_period','value'=>$date[0],'id'=>'datePicker'))
@@ -55,7 +54,7 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	 </tr>
 	 <tr>
 	  <td>Periode</td>
-	  <td><?php if(isset($periode))echo $periode;?></td>
+	  <td><?php if(isset($periode))echo $periode;else echo $period_;?></td>
 	 </tr>
 	 <tr>
 	  <td>Score Board</td>
