@@ -84,7 +84,8 @@ class Score_board extends CI_Controller {
 	
 	function update_score(){
 		if($_POST){
-			 //print_r($_POST);
+			 echo br().'DATA '.br();print_r($_POST);
+			 echo br(2);
 			 $id=0;
 			 for($c=0;$c <= count($_POST['content'])-1;$c++){
 			 	$id +=$c;
@@ -93,35 +94,24 @@ class Score_board extends CI_Controller {
 			 }
 			 	$plus=1;
 			 	if(isset($_POST['hidden'])){
-			 	  $filename=$_POST['hidden'];
-				 	for($a=0;$a<=count($_POST['hidden'])-1;$a++){
-				 	 //echo '['.$a.']';
-				 	 //$delete=$_POST['delete'][$a];
-					 if(isset($_POST['delete'][$a])){
-					   $delete=$_POST['delete'][$a];
-					 	   $this->delete_file($delete);
-					 	  /*if($delete == $_POST['hidden'][$a]) {
-					 	  }else{
-							  if($is_delete==true){
-							  $id += $a+1;
-							  //echo $delete .'=='. $_POST['hidden'][$a];
-							  //print_r($val);echo br(2);
-							  }
-						  }
-						  //exit;
-						  echo br();*/
-					  /*/for($d=0;$d<=count($_POST['delete'])-1;$d++){
-					  //}*/
-					  //echo $delete;
-					 }else{
-					 
-						  $val[]=array('ID'=>$id,'url'=>'file://'.$this->path($_POST['hidden'][$a]));
+			 	 $hidden=$_POST['hidden'];
+				 	for($b=0;$b<=count($hidden)-1;$b++){
+				 	   $filename=$hidden[$b];
+					   if(isset($_POST['delete'.$b])){
+						    $filedelete=$_POST['delete'.$b];
+						    if($filedelete==$filename){
+						 	   $this->delete_file($filedelete);
+						 	   //echo 'delete '.$filedelete.br();
+						   }else{
+							  $val[]=array('ID'=>$id,'url'=>'file://'.$this->path($filename));
+							  //echo 'simpan '.$filename.br();
+						    	}
+					    }else{
+						  $val[]=array('ID'=>$id,'url'=>'file://'.$this->path($filename));
+						  //echo 'simpan '.$filename.br();
+					    }
 					 }
-				 	}
-				 	//print_r($val);
 				 }
-				 //exit;
-			 	//print_r($_FILES['userfile']['name'][0]);
 			if($_FILES['userfile']['name'][0] != ''){
 				$this->load->library('upload');
 				$files = $_FILES;
@@ -139,7 +129,8 @@ class Score_board extends CI_Controller {
 					else	$val[]=array('ID'=>$id,'url'=>'file://'.$this->upload->data()['full_path']);
 				}
 			}
-			echo $data=json_encode($val);
+			$data=json_encode($val);
+			//echo br().'SIMPAN'.$data;
 			try{
 				$this->m->saveToDb('job_result',array('url'=>$data),array('ID'=>$this->flash()->flashdata('ID')));
 				redirect($this->flash()->flashdata('last_url'));
@@ -162,8 +153,8 @@ class Score_board extends CI_Controller {
 	//  upload an image options
 	    $config = array();
 	    $config['upload_path'] = './assets/uploads/score_board/';
-	    $config['allowed_types'] = 'gif|jpg|png';
-	    $config['max_size']      = '120000';
+	    $config['allowed_types'] = '*';
+	    //$config['max_size']      = '990000';
 	    $config['overwrite']     = FALSE;
 	    $config['file_name']     = md5(microtime());
 
@@ -459,18 +450,18 @@ class Score_board extends CI_Controller {
 	
 	function edit_targets(){
 		if(isset($_POST['id'])){
+			//print_r($_POST);
 			$ids=$this->input->post('id');
-			$value=$this->input->post('count');
 			$limit= count($ids);
-			if($limit == count($value)){
 			 for($a=0;$a<=$limit-1;$a++){
-				$id=$ids[$a];
-				$val=$value[$a];
+				$ex=explode('|',$ids[$a]);
+				 $id=$ex[0];
+				 $v=$ex[1];
+				$val=$this->input->post('count'.$v);
 				$data=array('count'=>$val);
 				$param=array('ID'=>$id);
 				$this->m->update_row('schedule',$data,$param);
 			 }
-			}
 			redirect('score_board/targets');
 		}
 		if(!isset($_POST['check'])){echo 'tidak ada field yang akan di edit!!!';exit;}

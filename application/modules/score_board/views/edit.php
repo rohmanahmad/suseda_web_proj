@@ -65,16 +65,25 @@
 	  	<div id='row2'>
 	  <?php
 	  	$id_c=0;
-	  	if(count($contents) != 0)
+	  	if(count($contents) != 0){
+	  	$data_delete=0;
 	  	foreach($contents as $c){
 	  	 $ex=explode('/',str_replace(array('http://','file://'),'',$c->url));
 	  	 $index=count($ex)-1;
-	  	 if(substr($c->url,0,4)=='file') 
-	  	 	echo form_hidden('hidden[]',$ex[$index])
-	  	 	.'<div class="row" >
-	  	 		<div class="col-md-6">'.img(array('src'=>'assets/uploads/score_board/'.$ex[$index],'style'=>'width:40px;')).'</div>
-			  	<div class="col-md-4">'.form_checkbox('delete[]',$ex[$index]).' Delete</div>
-			  </div>';
+	  	 if(substr($c->url,0,4)=='file') {
+	  	 	echo form_hidden('hidden[]',$ex[$index]);
+	  	 	echo '<div class="row" >';
+	  	 	$ext=substr($ex[$index],-4);
+	  	 	  if($ext=='.png' or $ext=='.bmp' or $ext=='.ico' or $ext=='.jpg' or $ext=='.gif'){
+	  	 		echo '<div class="col-md-6">'.img(array('src'=>'assets/uploads/score_board/'.$ex[$index],'style'=>'width:40px;')).'</div>';
+	  	 	  }else{
+	  	 	  	echo '<div class="col-md-6">'.anchor(base_url('assets/uploads/score_board/'.$ex[$index]),$ex[$index]).'</div>';
+	  	 	  }
+			  	echo '<div class="col-md-4">'.form_checkbox('delete'.$data_delete,$ex[$index]).' Delete</div>';
+			echo '</div>';
+			 $data_delete++;
+		 }
+	  	}
 	  	}
 	  	$id_c++;
 	  	echo '

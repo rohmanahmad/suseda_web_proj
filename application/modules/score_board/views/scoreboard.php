@@ -97,13 +97,13 @@ if($jobId != ''){
 		//if($date==date('Y-m-d'))$bg='#F95959';
 		echo "<td style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
 			<div class='row' style='margin-right: 0px;'>
-			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
-			  $total
-			  ."</div> 
 			  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>".
 			  form_checkbox('check[]',$sc_id).br().'<i>'.$count.'</i>' 
 			  ."</div> 
-			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'show','class="col-md-8"')."
+			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
+			  $total
+			  ."</div> 
+			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'laporan','class="col-md-8"')."
 			</div>
 		</td>";
 		$nn++;
@@ -120,7 +120,7 @@ if($jobId != ''){
 		var class_b="#data_count<?=$o?>";
 		var class_c="#ico<?=$o?>";
 	
-		$(class_a).html('<b>' + sum +'</b>');
+		$(class_a).html('<b>' + count +'</b>');
 		 if(sum < count){
 		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/confused.gif')?>\" title=\"Lagi Kalah!\">");
 		 }else
@@ -129,7 +129,7 @@ if($jobId != ''){
 		 }else{
 		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/grin.gif')?>\" title=\"Hehehe Pas!\">");
 		 }
-		$(class_b).text(count);
+		$(class_b).text(sum);
 
 	});
 	</script>

@@ -144,13 +144,13 @@ class Score_board_model extends CI_Model{
  function get_schedule_id($param){
  	$this->db->where($param);
  	$q=$this->db->get('schedule');
- 	$res=$q->row();
- 	return $res->ID;
+ 	$res=$q->result();
+ 	return $res;
  }
  
  function get_sch_datas($param){
  	$this->db->where($param);
- 	$this->db->select(array('schedule.ID as ID','job.job_name as jobname','schedule.count as count','schedule.date as date'));
+ 	$this->db->select(array('schedule.ID as ID','job.job_name as jobname','schedule.count as count','schedule.date as date','job.ID as job_id'));
  	$this->db->join('job','schedule.job_id=job.ID','left');
  	$q=$this->db->get('schedule');
  	return $q->row();

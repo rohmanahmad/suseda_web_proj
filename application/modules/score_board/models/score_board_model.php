@@ -99,7 +99,6 @@ class Score_board_model extends CI_Model{
  function delete_row($tablename,$param=array()){
  	$this->db->where($param);
  	$this->db->delete($tablename);
- 	//return $this->db->insert_id();
  }
  
  function update_row($tablename,$data=array(),$param=array()){
@@ -125,8 +124,6 @@ class Score_board_model extends CI_Model{
  	$q=$this->db->get('targets');
  	$res=$q->result();
  	foreach($res as $r){
- 		//print_r($r);
- 		//echo br(3);
  		$jres_id=$r->jres_id;
  		$sc_id=$r->sc_id;
  		$j_id=$r->j_id;
@@ -150,7 +147,7 @@ class Score_board_model extends CI_Model{
  
  function get_sch_datas($param){
  	$this->db->where($param);
- 	$this->db->select(array('schedule.ID as ID','job.job_name as jobname','schedule.count as count','schedule.date as date'));
+ 	$this->db->select(array('schedule.ID as ID','job.job_name as jobname','schedule.count as count','schedule.date as date','job.ID as job_id'));
  	$this->db->join('job','schedule.job_id=job.ID','left');
  	$q=$this->db->get('schedule');
  	return $q->row();
