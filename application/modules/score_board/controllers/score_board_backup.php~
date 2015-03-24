@@ -68,72 +68,54 @@ class Score_board extends CI_Controller {
 		$this->load->view('modal');
 	}
 	
-	function edit_job($scID=0,$job_id=0){
+	function edit_job($jresID=0,$job_id=0){
 		$userId=$this->get_uId();
 		$data['flash']=$this->flash();
-		$data['uri']=$this->uri;
+		$data['uri']=$this->uri_segment();
+		
 		$this->load->helper('form');
-		$data['res']=$this->m->get_score($scID,$job_id,$userId);
+		$data['res']=$this->m->get_score($jresID,$job_id,$userId);
 		$this->header();
+		
 		$this->load->view('edit',$data);
 	}
 	
-	function update_sc($sc_id){ echo $sc_id;
+	function update_sc(){
 		$str=urlencode($_POST['content']);
-	 	if(!empty($str)){
-	 	 $ex=explode('%0A',$str);
-	 	 $total=count($ex);
-	 	}else{
-	 	 $total=0;
-	 	}
-		$res=$this->m->get_job_res($sc_id);
-		$job_res_id=array();
-		foreach($res as $r){
-			$job_res_id[]=$r->ID;
-		}
-		if($total <= 0)$url=array();
+	 	$ex=explode('%0A',$str);
+	 	$total=count($ex);
 		 for($a=0;$a <= $total-1;$a++){
-		 	if($ex[$a] !== '')
 		 	$url[]=urldecode($ex[$a]);
 		 }
-		$count_job=count($job_res_id);
-		$count_url=count($url);
-		 
-		 if($count_job <= $count_url){
-		  for($a=0;$a<=$count_url - 1;$a++){
-		   $content=$url[$a];
-		   if(isset($job_res_id[$a])){
-		   	$jres_id=$job_res_id[$a];
-		   	$this->m->update_job_res($jres_id,$content);
-		   }else{
-		   	$this->m->insert_new_job_res($sc_id,$content);
-		   }
-		  }
-		 }elseif($count_job > $count_url){
-		 	for($a=0;$a<=$count_job-1;$a++){
-		 		$id=$job_res_id[$a];
-		 		if(isset($url[$a])){
-		 			$this->m->update_job_res($id,$url[$a]);
-		 		}else{
-		 			$this->m->delete_job_res_id($id);
-		 		}
-		 	}
-		 }
-		 return $sc_id;
+		 print_r($url);
 	}
 	
 	function update_score(){
 		if($_POST){
-			$sc_id=$this->flash()->flashdata('ID');
-			 	$this->update_sc($sc_id);
+			 	$str=urlencode($_POST['content']);
+			 	$ex=explode('%0A',$str);
+			 	$total=count($ex);
+			 for($a=0;$a <= $total-1;$a++){
+			 	$url=urldecode($ex[$a]);
+			 }
+			 	exit;
+			 	$plus=1;
 			 	if(isset($_POST['hidden'])){
 			 	 $hidden=$_POST['hidden'];
 				 	for($b=0;$b<=count($hidden)-1;$b++){
-				 	   $id=$hidden[$b];
+				 	   $filename=$hidden[$b];
 					   if(isset($_POST['delete'.$b])){
-					   	$filedelete=$_POST['delete'.$b];
-							$this->delete_file($filedelete); //DELETE
-							$this->m->prepare_delete_jres($id);
+						    $filedelete=$_POST['delete'.$b];
+						    if($filedelete==$filename){
+						 	   $this->delete_file($filedelete);
+						 	   //echo 'delete '.$filedelete.br();
+						   }else{
+							  $val[]=array('ID'=>$id,'url'=>'file://'.$this->path($filename));
+							  //echo 'simpan '.$filename.br();
+						    	}
+					    }else{
+						  $val[]=array('ID'=>$id,'url'=>'file://'.$this->path($filename));
+						  //echo 'simpan '.$filename.br();
 					    }
 					 }
 				 }
@@ -148,14 +130,22 @@ class Score_board extends CI_Controller {
 					$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
 					$_FILES['userfile']['error']= $files['userfile']['error'][$i];
 					$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
+					$id += $i+1;
 					$this->upload->initialize($this->set_upload_options());
 					if(!$this->upload->do_upload())	print_r($this->upload->display_errors());
-					else	
-					$this->m->insert_new_job_res($sc_id,'file://'.$this->upload->data()['full_path']);
+					else	$val[]=array('ID'=>$id,'url'=>'file://'.$this->upload->data()['full_path']);
 				}
 			}
+			$data=json_encode($val);
+			//echo br().'SIMPAN'.$data;
+			try{
+				$this->m->saveToDb('job_result',array('url'=>$data),array('ID'=>$this->flash()->flashdata('ID')));
+				redirect($this->flash()->flashdata('last_url'));
+			}catch(Exception $e){
+				print_r($e->getMessage());
+			}
 		}
-		redirect($this->flash()->flashdata('last_url'));
+		exit;
 	}
 	
 	function delete_file($filename){
@@ -169,16 +159,11 @@ class Score_board extends CI_Controller {
 	{   
 	//  upload an image options
 	    $config = array();
-	    $dir='./assets/uploads/score_board/'.date('d-m-y');
-	    if(!is_dir($dir)){
-	    	mkdir($dir,0777,true);
-	    	chmod($dir, 0777);
-	    }
-	    $config['upload_path'] = $dir;
+	    $config['upload_path'] = './assets/uploads/score_board/';
 	    $config['allowed_types'] = '*';
 	    //$config['max_size']      = '990000';
 	    $config['overwrite']     = FALSE;
-	    $config['file_name']     = date('dmygis');
+	    $config['file_name']     = md5(microtime());
 
 
 	    return $config;
@@ -213,7 +198,7 @@ class Score_board extends CI_Controller {
 		//print_r($_POST);
 		$target_id=$this->flash()->flashdata('id');
 		$this->m->save_post_period($target_id);
-		redirect('score_board/targets');
+		//redirect('score_board/targets');
 	}
 	
 	function save_post_target($target_id=0){
@@ -238,11 +223,11 @@ class Score_board extends CI_Controller {
 				$job_data[]=$job;
 			}
 		 }
-
-		 $this->create_new_job($target_id,$job_data);
+//		 print_r($job_data);
+			$this->create_new_job($target_id,$job_data);
 
 		}else{echo 'error';exit;}
-		redirect('score_board/targets/'.$target_id);
+		//redirect('score_board/targets/'.$target_id);
 		
 	}
 	
@@ -262,7 +247,7 @@ class Score_board extends CI_Controller {
 	
 	function delete_target($id=0){
 		$userId=$this->get_uId();
-		$q=$this->m->getTargets($userId,$id);
+		$q=$this->m->getTargets(array('ID'=>$id,'user_id'=>$userId));
 		if(count($q)>0){
 			$this->m->delete_target_packet($id);
 		}

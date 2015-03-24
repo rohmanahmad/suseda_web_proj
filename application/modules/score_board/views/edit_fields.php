@@ -13,7 +13,7 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	foreach($result as $result){
 	 $ID=$result->ID;
 	 $tname=$result->target_name;
-	 $period_=str_replace('::',' - ',str_replace('-','/',$result->period));
+	 $period_=str_replace('-','/',$result->period_start).' - '.str_replace('-','/',$result->period_finish);
 	 $job_id=$result->job_id;
 	 $jname=$result->job_name;
 	  if($first == true){
@@ -25,13 +25,13 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	  }
 	      if($n == 1)
 		if($name=='period' ){ 
-		 $periode=form_input(array('type'=>'date','name'=>'start_period','value'=>$date[0],'id'=>'datePicker'))
+		 $periode=form_input(array('type'=>'date','name'=>'start_period','value'=>$date[0],'id'=>'datePicker','class'=>'form-control'))
 		  	.br(2)
-		  	.form_input(array('type'=>'date','name'=>'end_period','value'=>$date[1],'id'=>'datePicker'));
+		  	.form_input(array('type'=>'date','name'=>'end_period','value'=>$date[1],'id'=>'datePicker','class'=>'form-control'));
 		$n=2;
 		}
 		if($name =='tname'){
-		 $tname=form_input('tname',$tname,'style="width:100%"');
+		 $tname=form_input('tname',$tname,'style="width:100%" class="form-control"');
 		}
 	 if($name =='sboard' ){
 	 	if($first == true){

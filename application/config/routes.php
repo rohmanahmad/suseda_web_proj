@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "score_board";
+$route['default_controller'] = "score_board";// sop
 $route['404_override'] = '';
 
 

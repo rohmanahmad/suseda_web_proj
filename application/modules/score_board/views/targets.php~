@@ -12,20 +12,21 @@ if (!isset($result)) exit;
  $i=1;
   foreach($result as $r){
    $id=$r->ID;
-   $period=$r->period;
+   $period_start=$r->period_start;
+   $period_finish=$r->period_finish;
    $target=$r->target_name;
  ?>
  <tr>
   <td><?=$i?></td>
   <td><?php
-  	$start=date_format(date_create(explode('::',$period)[0]),'d/M/Y');
-  	$finish=date_format(date_create(explode('::',$period)[1]),'d/M/Y');
+  	$start=date_format(date_create($period_start)),'d/M/Y');
+  	$finish=date_format(date_create($period_finish)),'d/M/Y');
   	$period=$start.' - '.$finish;
   	echo $period;
   	?></td>
   <td><?=$target?></td>
   <td><?=anchor(site_url('score_board/scoreBoard/'.$id),'<span class="glyphicon glyphicon-list" title="view"></span>').' | '.
-  	anchor(site_url('score_board/delete_target/'.$id),'<span class="glyphicon glyphicon-trash" title="view"></span>')?></td>
+  	anchor(site_url('score_board/delete_target/'.$id),'<span class="glyphicon glyphicon-trash" title="delete"></span>')?></td>
  </tr>
  <?php
   $i++;

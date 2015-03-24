@@ -6,7 +6,12 @@ $o=0;
  <?= form_open('score_board/edit_targets','class="form_target"')?>
 <table border=0 class='table'>
 <?php
+//$rowCount=count($result);
+//print_r($result);
 foreach($result as $r){
+ /*
+ $schId=$r->a;
+  */
  $targetId=$r->tId;
  $jobId=$r->jId;
  $jobName=ucwords($r->job_name);
@@ -16,8 +21,8 @@ foreach($result as $r){
 	 	 $ID=$r->tId;
 		 $targetName=$r->target_name;
 		 $userId=$r->user_id;
-		 $period=str_replace('-','/',$r->period_start).' - '.str_replace('-','/',$r->period_finish);
-		 $tgl=$c->get_period($jobId);
+		 $period=str_replace('::',' - ',str_replace('-','/',$r->period));
+		 $tgl=$model->get_period(array('schedule.job_id'=>$jobId));
 		 $rowCount=count($tgl);
 	?>
 	 <tr>
@@ -75,15 +80,16 @@ if($jobId != ''){
 	  </td>
 	  <td id="<?='ico'.$o?>">.</td>
 	<?php
-	$job=$c->getJobRes($jobId);
+
+	$job=$model->getJobRes(array('schedule.job_id'=>$jobId));
 	$nn=0;
 	$fontsize=15 - ($rowCount/6);
 	$sum=0;
 	$total_count=0;
 	  foreach($job as $r){
 	  	$count=$r->count;
-		$sc_id=$r->sc_id;
-	  	$total=$c->get_total_contents($sc_id);
+		$sc_id=$r->ID;
+	  	$total=$model->get_total_contents(array('schedule.ID'=>$r->ID));
 	  	$sum += $total;
 	  	$total_count += $count;
 	  	$date=$r->date;
@@ -97,7 +103,7 @@ if($jobId != ''){
 			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
 			  $total
 			  ."</div> 
-			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'laporan','class="col-md-8"')."
+			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'show','class="col-md-8"')."
 			</div>
 		</td>";
 		$nn++;

@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "sqlite";
+$route['default_controller'] = "sop";// score_board
 $route['404_override'] = '';
 
 
